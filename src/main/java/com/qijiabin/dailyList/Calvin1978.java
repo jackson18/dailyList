@@ -29,8 +29,10 @@ public class Calvin1978 implements PageProcessor{
 	
 	private Site site = Site.me()
 			.setDomain("calvin1978.blogcn.com")
-			.setUserAgent("Mozilla/5.0 (Macintosh; Intel Mac OS X 10_7_2) AppleWebKit/537.31 (KHTML, like Gecko) Chrome/26.0.1410.65 Safari/537.31")
-			.setSleepTime(1000).setRetryTimes(3);
+			.setUserAgent(Constants.USER_AGENT)
+			.setCharset(Constants.CHARSET)
+			.setSleepTime(Constants.SLEEP_TIME)
+			.setRetryTimes(Constants.RETRY_TIMES);
 	private SimpleDateFormat sdf = new SimpleDateFormat("MM月 dd, yyyy");
 	private SimpleDateFormat sdf2 = new SimpleDateFormat("yyyy-MM-dd");
 	//列表页的正则表达式

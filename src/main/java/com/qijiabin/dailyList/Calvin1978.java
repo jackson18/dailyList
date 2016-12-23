@@ -5,6 +5,10 @@ import java.util.Date;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
+import com.qijiabin.dailyList.entity.Target;
+import com.qijiabin.dailyList.support.MyPipeline;
+import com.qijiabin.dailyList.util.Constants;
+
 import us.codecraft.webmagic.Page;
 import us.codecraft.webmagic.Site;
 import us.codecraft.webmagic.Spider;
@@ -23,7 +27,10 @@ import us.codecraft.webmagic.selector.Selectable;
  */
 public class Calvin1978 implements PageProcessor{
 	
-	private Site site = Site.me().setSleepTime(1000).setRetryTimes(3);
+	private Site site = Site.me()
+			.setDomain("calvin1978.blogcn.com")
+			.setUserAgent("Mozilla/5.0 (Macintosh; Intel Mac OS X 10_7_2) AppleWebKit/537.31 (KHTML, like Gecko) Chrome/26.0.1410.65 Safari/537.31")
+			.setSleepTime(1000).setRetryTimes(3);
 	private SimpleDateFormat sdf = new SimpleDateFormat("MM月 dd, yyyy");
 	private SimpleDateFormat sdf2 = new SimpleDateFormat("yyyy-MM-dd");
 	//列表页的正则表达式
@@ -43,14 +50,14 @@ public class Calvin1978 implements PageProcessor{
 			//列表页
 			if (page.getUrl().regex(URL_LIST).match()) {
 				List<String> l_post = page.getHtml().links().regex(URL_POST).all(); //目标详情
-				List<String> l_url = page.getHtml().links().regex(URL_LIST).all();	//所有的列表
+//				List<String> l_url = page.getHtml().links().regex(URL_LIST).all();	//所有的列表
 			    page.addTargetRequests(l_post);
-			    page.addTargetRequests(l_url);
+//			    page.addTargetRequests(l_url);
 			//详情页
 			} else {
 				Selectable selectable = page.getHtml().xpath("//article/header/");
 			    Date date = sdf.parse(selectable.xpath("//p/time/text()").toString());
-			    if (sdf2.parse("2016-11-01").before(date)) {
+			    if (sdf2.parse(Constants.COMPARE_DATE).before(date)) {
 			    	Target t = new Target();
 			    	t.setUrl(page.getUrl().toString());
 			    	t.setTitle(selectable.xpath("//h1/text()").toString());
@@ -66,22 +73,14 @@ public class Calvin1978 implements PageProcessor{
 		}	
 	}
 	
-	public static void main(String[] args) {
+	public static void run() {
 		Spider.create(new Calvin1978())
 			.addUrl("http://calvin1978.blogcn.com/page/1")	//开始地址	
 			.addPipeline(new MyPipeline())	//打印到控制台
 			.addPipeline(new FilePipeline("D:\\calvin1978"))	//保存到文件夹
 			.thread(3)	//开启3线程
 			.run();
-		System.out.println("**********结果如下*********");
-		Runtime.getRuntime().addShutdownHook(new Thread(new Runnable() {
-			@Override
-			public void run() {
-				for (Target t : list) {
-					System.out.println(t);
-				}
-			}
-		}));
 	}
 	
 }
+

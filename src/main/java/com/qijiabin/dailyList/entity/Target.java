@@ -1,4 +1,4 @@
-package com.qijiabin.dailyList;
+package com.qijiabin.dailyList.entity;
 
 /**
  * ========================================================

@@ -3,11 +3,11 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 import us.codecraft.webmagic.Page;
 import us.codecraft.webmagic.Site;
 import us.codecraft.webmagic.Spider;
-import us.codecraft.webmagic.pipeline.ConsolePipeline;
 import us.codecraft.webmagic.pipeline.FilePipeline;
 import us.codecraft.webmagic.processor.PageProcessor;
 import us.codecraft.webmagic.selector.Selectable;
@@ -21,7 +21,7 @@ import us.codecraft.webmagic.selector.Selectable;
  * ========================================================
  * 修订日期     修订人    描述
  */
-public class calvin1978 implements PageProcessor{
+public class Calvin1978 implements PageProcessor{
 	
 	private Site site = Site.me().setSleepTime(1000).setRetryTimes(3);
 	private SimpleDateFormat sdf = new SimpleDateFormat("MM月 dd, yyyy");
@@ -30,6 +30,7 @@ public class calvin1978 implements PageProcessor{
 	public static final String URL_LIST = "http://calvin1978\\.blogcn\\.com/page/\\d+";
 	//详情页的正则表达式
     public static final String URL_POST = "http://calvin1978\\.blogcn\\.com/articles/\\w+\\.html";
+    public static final CopyOnWriteArrayList<Target> list = new CopyOnWriteArrayList<Target>();
 	
 	@Override
 	public Site getSite() {
@@ -50,9 +51,11 @@ public class calvin1978 implements PageProcessor{
 				Selectable selectable = page.getHtml().xpath("//article/header/");
 			    Date date = sdf.parse(selectable.xpath("//p/time/text()").toString());
 			    if (sdf2.parse("2016-11-01").before(date)) {
-			    	page.putField("url", page.getUrl());
-			    	page.putField("title", selectable.xpath("//h1/text()"));
-			    	page.putField("time", sdf2.format(date));
+			    	Target t = new Target();
+			    	t.setUrl(page.getUrl().toString());
+			    	t.setTitle(selectable.xpath("//h1/text()").toString());
+			    	t.setTime(sdf2.format(date).toString());
+			    	page.putField("target", t);
 			    	System.out.println();
 			    } else {
 			    	page.setSkip(true);
@@ -64,12 +67,21 @@ public class calvin1978 implements PageProcessor{
 	}
 	
 	public static void main(String[] args) {
-		Spider.create(new calvin1978())
+		Spider.create(new Calvin1978())
 			.addUrl("http://calvin1978.blogcn.com/page/1")	//开始地址	
-			.addPipeline(new ConsolePipeline())	//打印到控制台
+			.addPipeline(new MyPipeline())	//打印到控制台
 			.addPipeline(new FilePipeline("D:\\calvin1978"))	//保存到文件夹
-			.thread(5)	//开启5线程
+			.thread(3)	//开启3线程
 			.run();
+		System.out.println("**********结果如下*********");
+		Runtime.getRuntime().addShutdownHook(new Thread(new Runnable() {
+			@Override
+			public void run() {
+				for (Target t : list) {
+					System.out.println(t);
+				}
+			}
+		}));
 	}
 	
 }

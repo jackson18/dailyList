@@ -8,11 +8,11 @@ import java.util.concurrent.CopyOnWriteArrayList;
 import com.qijiabin.dailyList.entity.Target;
 import com.qijiabin.dailyList.support.MyPipeline;
 import com.qijiabin.dailyList.util.Constants;
+import com.qijiabin.dailyList.util.DateUtil;
 
 import us.codecraft.webmagic.Page;
 import us.codecraft.webmagic.Site;
 import us.codecraft.webmagic.Spider;
-import us.codecraft.webmagic.pipeline.FilePipeline;
 import us.codecraft.webmagic.processor.PageProcessor;
 import us.codecraft.webmagic.selector.Selectable;
 
@@ -59,13 +59,12 @@ public class Calvin1978 implements PageProcessor{
 			} else {
 				Selectable selectable = page.getHtml().xpath("//article/header/");
 			    Date date = sdf.parse(selectable.xpath("//p/time/text()").toString());
-			    if (sdf2.parse(Constants.COMPARE_DATE).before(date)) {
+			    if (DateUtil.getDateBefore(new Date(), Constants.INTERVAL_DAY).before(date)) {
 			    	Target t = new Target();
 			    	t.setUrl(page.getUrl().toString());
 			    	t.setTitle(selectable.xpath("//h1/text()").toString());
 			    	t.setTime(sdf2.format(date).toString());
 			    	page.putField("target", t);
-			    	System.out.println();
 			    } else {
 			    	page.setSkip(true);
 			    }
@@ -79,7 +78,6 @@ public class Calvin1978 implements PageProcessor{
 		Spider.create(new Calvin1978())
 			.addUrl("http://calvin1978.blogcn.com/page/1")	//开始地址	
 			.addPipeline(new MyPipeline())	//打印到控制台
-			.addPipeline(new FilePipeline("D:\\calvin1978"))	//保存到文件夹
 			.thread(3)	//开启3线程
 			.run();
 	}

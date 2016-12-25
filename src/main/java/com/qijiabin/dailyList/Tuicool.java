@@ -16,29 +16,30 @@ import us.codecraft.webmagic.Spider;
 import us.codecraft.webmagic.processor.PageProcessor;
 import us.codecraft.webmagic.selector.Selectable;
 
-/**
+/*
  * ========================================================
- * 日 期：2016年12月23日 下午8:36:06
+ * 日 期：2016年12月25日 上午10:15:02
+ * 作 者：jackson
  * 版 本：1.0.0
  * 类说明：
  * TODO
  * ========================================================
  * 修订日期     修订人    描述
  */
-public class MeiTuan implements PageProcessor {
-
+public class Tuicool implements PageProcessor {
+	
 	private Site site = Site.me()
-			.setDomain("tech.meituan.com")
+			.setDomain("www.tuicool.com")
 			.setUserAgent(Constants.USER_AGENT)
 			.setCharset(Constants.CHARSET)
 			.setSleepTime(Constants.SLEEP_TIME)
 			.setRetryTimes(Constants.RETRY_TIMES);
-	private SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+	private SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd");
 	private SimpleDateFormat sdf2 = new SimpleDateFormat("yyyy-MM-dd");
 	// 详情页的正则表达式
-	public static final String URL_POST = "http://tech\\.meituan\\.com/\\w+\\.html";
+	public static final String URL_POST = "http://www\\.tuicool\\.com/mags/\\w{24}";
 	// 列表页的正则表达式
-	public static final String URL_LIST = "http://tech\\.meituan\\.com/\\?l=\\w+";
+	public static final String URL_LIST = "http://www\\.tuicool\\.com/mags\\?p=\\d+";
 	
 
 	@Override
@@ -55,12 +56,13 @@ public class MeiTuan implements PageProcessor {
 				page.addTargetRequests(list);
 			// 详情页
 			} else {
-				Selectable selectable = page.getHtml().xpath("//article/header/");
-				Date date = sdf.parse(selectable.xpath("//p/span[@class='date']/text()").toString());
+				Selectable selectable = page.getHtml().xpath("//div[@class='span8']/div/div/h3[@class='period-title']");
+				String dateStr = selectable.xpath("//sub/text()").toString();
+				Date date = sdf.parse(dateStr.substring(1, dateStr.length()-1));
 				if (DateUtil.getDateBefore(new Date(), Constants.INTERVAL_DAY).before(date)) {
 					Target t = new Target();
 					t.setUrl(page.getUrl().toString());
-					t.setTitle(selectable.xpath("//h1/text()").toString());
+					t.setTitle("编程狂人");
 					t.setTime(sdf2.format(date).toString());
 					page.putField("target", t);
 				} else {
@@ -73,11 +75,14 @@ public class MeiTuan implements PageProcessor {
 	}
 	
 	public static void run() {
-		Spider.create(new MeiTuan()).addUrl("http://tech.meituan.com/?l=10") // 开始地址
+		Spider.create(new Tuicool()).addUrl("http://www.tuicool.com/mags?p=1") // 开始地址
 			.addPipeline(new MyPipeline()) // 打印到控制台
 			.thread(3) // 开启3线程
 			.run();
 	}
 	
+	public static void main(String[] args) {
+		run();
+	}
+	
 }
-

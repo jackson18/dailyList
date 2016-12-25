@@ -20,16 +20,12 @@ public class Startup {
 	public static void main(String[] args) {
 		Calvin1978.run();
 		MeiTuan.run();
+		Tuicool.run();
 		
 		System.out.println("**********结果如下*********");
-		Runtime.getRuntime().addShutdownHook(new Thread(new Runnable() {
-			@Override
-			public void run() {
-				for (Target t : list) {
-					System.out.println(t);
-				}
-			}
-		}));
+		for (Target t : list) {
+			System.out.println(t);
+		}
 	}
 
 }

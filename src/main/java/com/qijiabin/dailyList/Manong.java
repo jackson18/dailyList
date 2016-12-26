@@ -4,8 +4,6 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import com.qijiabin.dailyList.entity.Target;
 import com.qijiabin.dailyList.support.MyPipeline;
@@ -59,7 +57,7 @@ public class Manong implements PageProcessor {
 			// 详情页
 			} else {
 				Selectable selectable = page.getHtml().xpath("//body");
-				String dateStr = parseDate(selectable.xpath("//h2/text()").toString());
+				String dateStr = selectable.xpath("//h2/text()").regex("(\\d{4}-\\d{2}-\\d{2})").toString();
 				Date date = sdf.parse(dateStr);
 				if (DateUtil.getDateBefore(new Date(), Constants.INTERVAL_DAY).before(date)) {
 					Target t = new Target();
@@ -81,16 +79,6 @@ public class Manong implements PageProcessor {
 			.addPipeline(new MyPipeline()) // 打印到控制台
 			.thread(5) // 开启3线程
 			.run();
-	}
-	
-	private static String parseDate(String content) {
-		String result = null;
-		Pattern p = Pattern.compile("(.*)（(\\d{4}-\\d{2}-\\d{2})）");
-		Matcher m = p.matcher(content);
-		while(m.find()) {
-			result = m.group(2);
-		}
-		return result;
 	}
 	
 }

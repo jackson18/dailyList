@@ -15,6 +15,6 @@ public class Constants {
 	public static final String CHARSET = "UTF-8";
 	public static final int SLEEP_TIME = 1000;
 	public static final int RETRY_TIMES = 3;
-	public static final int INTERVAL_DAY = 7;
+	public static final int INTERVAL_DAY = 3;
 
 }

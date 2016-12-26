@@ -21,7 +21,7 @@ import us.codecraft.webmagic.selector.Selectable;
  * 日 期：2016年12月25日 上午10:15:02
  * 作 者：jackson
  * 版 本：1.0.0
- * 类说明：
+ * 类说明：编程狂人
  * TODO
  * ========================================================
  * 修订日期     修订人    描述
@@ -77,12 +77,8 @@ public class Tuicool implements PageProcessor {
 	public static void run() {
 		Spider.create(new Tuicool()).addUrl("http://www.tuicool.com/mags?p=1") // 开始地址
 			.addPipeline(new MyPipeline()) // 打印到控制台
-			.thread(3) // 开启3线程
+			.thread(5) // 开启3线程
 			.run();
-	}
-	
-	public static void main(String[] args) {
-		run();
 	}
 	
 }

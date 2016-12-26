@@ -21,6 +21,8 @@ public class Startup {
 		Calvin1978.run();
 		MeiTuan.run();
 		Tuicool.run();
+		Manong.run();
+		Importnew.run();
 		
 		System.out.println("**********结果如下*********");
 		for (Target t : list) {

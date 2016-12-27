@@ -11,6 +11,9 @@ import javax.mail.Transport;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.qijiabin.dailyList.util.Constants;
 import com.sun.mail.util.MailSSLSocketFactory;
 
@@ -25,12 +28,15 @@ import com.sun.mail.util.MailSSLSocketFactory;
  */
 public class SendEmail {
 	
+	private static final Logger log = LoggerFactory.getLogger(SendEmail.class);
+	
 	/**
 	 * 发送
 	 * @param args
 	 * @throws Exception
 	 */
 	public static void send(String content) {
+		log.info("**************邮件发送开始**************");
         try {
 			Properties prop = new Properties();
 			// 开启debug调试，以便在控制台查看
@@ -62,14 +68,19 @@ public class SendEmail {
 			ts.sendMessage(message, message.getAllRecipients());
 			ts.close();
 		} catch (NoSuchProviderException e) {
+			log.error(e.getMessage());
 			e.printStackTrace();
 		} catch (GeneralSecurityException e) {
+			log.error(e.getMessage());
 			e.printStackTrace();
 		} catch (MessagingException e) {
+			log.error(e.getMessage());
 			e.printStackTrace();
 		} catch (Exception e) {
+			log.error(e.getMessage());
 			e.printStackTrace();
 		}
+        log.info("***********邮件发送结束********************");
     }
 
     /**

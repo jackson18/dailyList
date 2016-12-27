@@ -1,9 +1,11 @@
 package com.qijiabin.dailyList;
 
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+
+import org.apache.commons.lang3.time.DateFormatUtils;
+import org.apache.commons.lang3.time.DateUtils;
 
 import com.qijiabin.dailyList.entity.Target;
 import com.qijiabin.dailyList.support.MyPipeline;
@@ -34,8 +36,6 @@ public class Tuicool implements PageProcessor {
 			.setCharset(Constants.CHARSET)
 			.setSleepTime(Constants.SLEEP_TIME)
 			.setRetryTimes(Constants.RETRY_TIMES);
-	private SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd");
-	private SimpleDateFormat sdf2 = new SimpleDateFormat("yyyy-MM-dd");
 	// 详情页的正则表达式
 	public static final String URL_POST = "http://www\\.tuicool\\.com/mags/\\w{24}";
 	// 列表页的正则表达式
@@ -58,12 +58,12 @@ public class Tuicool implements PageProcessor {
 			} else {
 				Selectable selectable = page.getHtml().xpath("//div[@class='span8']/div/div/h3[@class='period-title']");
 				String dateStr = selectable.xpath("//sub/text()").toString();
-				Date date = sdf.parse(dateStr.substring(1, dateStr.length()-1));
+				Date date = DateUtils.parseDate(dateStr.substring(1, dateStr.length()-1), "yyyy/MM/dd");
 				if (DateUtil.getDateBefore(new Date(), Constants.INTERVAL_DAY).before(date)) {
 					Target t = new Target();
 					t.setUrl(page.getUrl().toString());
 					t.setTitle("编程狂人");
-					t.setTime(sdf2.format(date).toString());
+					t.setTime(DateFormatUtils.format(date, "yyyy-MM-dd"));
 					page.putField("target", t);
 				} else {
 					page.setSkip(true);
@@ -77,7 +77,7 @@ public class Tuicool implements PageProcessor {
 	public static void run() {
 		Spider.create(new Tuicool()).addUrl("http://www.tuicool.com/mags?p=1") // 开始地址
 			.addPipeline(new MyPipeline()) // 打印到控制台
-			.thread(5) // 开启3线程
+			.thread(5) // 开启5线程
 			.run();
 	}
 	

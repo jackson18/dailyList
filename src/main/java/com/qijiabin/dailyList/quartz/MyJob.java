@@ -12,6 +12,7 @@ import com.qijiabin.dailyList.Importnew;
 import com.qijiabin.dailyList.Manong;
 import com.qijiabin.dailyList.MeiTuan;
 import com.qijiabin.dailyList.Tuicool;
+import com.qijiabin.dailyList.email.SendEmail;
 import com.qijiabin.dailyList.entity.Target;
 
 /**
@@ -36,9 +37,13 @@ public class MyJob implements Job {
 		Importnew.run();
 		
 		System.out.println("**********结果如下*********");
+		StringBuilder sb = new StringBuilder();
 		for (Target t : list) {
 			System.out.println(t);
+			sb.append(t).append("<br/>");
 		}
+		SendEmail.send(sb.toString());
+		list.clear();
 	}
 	
 }

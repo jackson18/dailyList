@@ -1,9 +1,11 @@
 package com.qijiabin.dailyList;
 
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+
+import org.apache.commons.lang3.time.DateFormatUtils;
+import org.apache.commons.lang3.time.DateUtils;
 
 import com.qijiabin.dailyList.entity.Target;
 import com.qijiabin.dailyList.support.MyPipeline;
@@ -33,10 +35,8 @@ public class MeiTuan implements PageProcessor {
 			.setCharset(Constants.CHARSET)
 			.setSleepTime(Constants.SLEEP_TIME)
 			.setRetryTimes(Constants.RETRY_TIMES);
-	private SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
-	private SimpleDateFormat sdf2 = new SimpleDateFormat("yyyy-MM-dd");
 	// 详情页的正则表达式
-	public static final String URL_POST = "http://tech\\.meituan\\.com/\\w+\\.html";
+	public static final String URL_POST = "http://tech\\.meituan\\.com/[a-zA-Z_-]+\\.html";
 	// 列表页的正则表达式
 	public static final String URL_LIST = "http://tech\\.meituan\\.com/\\?l=\\w+";
 	
@@ -56,12 +56,12 @@ public class MeiTuan implements PageProcessor {
 			// 详情页
 			} else {
 				Selectable selectable = page.getHtml().xpath("//article/header/");
-				Date date = sdf.parse(selectable.xpath("//p/span[@class='date']/text()").toString());
+				Date date = DateUtils.parseDate(selectable.xpath("//p/span[@class='date']/text()").toString(), "yyyy-MM-dd HH:mm");
 				if (DateUtil.getDateBefore(new Date(), Constants.INTERVAL_DAY).before(date)) {
 					Target t = new Target();
 					t.setUrl(page.getUrl().toString());
 					t.setTitle(selectable.xpath("//h1/text()").toString());
-					t.setTime(sdf2.format(date).toString());
+					t.setTime(DateFormatUtils.format(date, "yyyy-MM-dd"));
 					page.putField("target", t);
 				} else {
 					page.setSkip(true);
@@ -75,7 +75,7 @@ public class MeiTuan implements PageProcessor {
 	public static void run() {
 		Spider.create(new MeiTuan()).addUrl("http://tech.meituan.com/?l=10") // 开始地址
 			.addPipeline(new MyPipeline()) // 打印到控制台
-			.thread(5) // 开启3线程
+			.thread(5) // 开启5线程
 			.run();
 	}
 	

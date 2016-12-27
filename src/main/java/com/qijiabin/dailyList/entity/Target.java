@@ -35,6 +35,6 @@ public class Target {
 	}
 	@Override
 	public String toString() {
-		return "Target [url=" + url + ", title=" + title + ", time=" + time + "]";
+		return "Target [url=<a href='"+url+" 'target='_blank'> " + url + "</a>, title=" + title + ", time=" + time + "]";
 	}
 }

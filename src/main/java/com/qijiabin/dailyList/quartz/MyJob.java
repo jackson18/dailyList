@@ -6,6 +6,8 @@ import java.util.concurrent.CopyOnWriteArrayList;
 import org.quartz.Job;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.qijiabin.dailyList.Calvin1978;
 import com.qijiabin.dailyList.Importnew;
@@ -26,17 +28,18 @@ import com.qijiabin.dailyList.entity.Target;
  */
 public class MyJob implements Job {
 	
+	private static final Logger log = LoggerFactory.getLogger(MyJob.class);
 	public static final CopyOnWriteArrayList<Target> list = new CopyOnWriteArrayList<Target>();
 	
 	public void execute(JobExecutionContext jobExecutionContext) throws JobExecutionException {
-		System.out.println(new Date() + ": 开始执行定时任务...");
+		log.info("{} : 开始执行定时任务...", new Date());
 		Calvin1978.run();
 		MeiTuan.run();
 		Tuicool.run();
 		Manong.run();
 		Importnew.run();
 		
-		System.out.println("**********结果如下*********");
+		log.info("************结果如下***************");
 		StringBuilder sb = new StringBuilder();
 		for (Target t : list) {
 			System.out.println(t);
@@ -44,6 +47,7 @@ public class MyJob implements Job {
 		}
 		SendEmail.send(sb.toString());
 		list.clear();
+		log.info("{} : 定时任务结果...", new Date());
 	}
 	
 }

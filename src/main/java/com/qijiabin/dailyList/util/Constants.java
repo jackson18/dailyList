@@ -16,5 +16,7 @@ public class Constants {
 	public static final int SLEEP_TIME = 1000;
 	public static final int RETRY_TIMES = 3;
 	public static final int INTERVAL_DAY = 3;
+	public static final String CRON_EXPRESSION = "0 0 5 * * ?"; // 每天早上5点执行一次
+	public static final String CRON_EXPRESSION_Test = "0 0/8 * * * ?"; // 每20秒执行一次
 
 }

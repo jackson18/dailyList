@@ -1,8 +1,6 @@
 package com.qijiabin.dailyList;
 
-import java.util.concurrent.CopyOnWriteArrayList;
-
-import com.qijiabin.dailyList.entity.Target;
+import com.qijiabin.dailyList.quartz.MySchedule;
 
 /**
  * ========================================================
@@ -15,19 +13,8 @@ import com.qijiabin.dailyList.entity.Target;
  */
 public class Startup {
 	
-	public static final CopyOnWriteArrayList<Target> list = new CopyOnWriteArrayList<Target>();
-
 	public static void main(String[] args) {
-		Calvin1978.run();
-		MeiTuan.run();
-		Tuicool.run();
-		Manong.run();
-		Importnew.run();
-		
-		System.out.println("**********结果如下*********");
-		for (Target t : list) {
-			System.out.println(t);
-		}
+		MySchedule.start();
 	}
 
 }

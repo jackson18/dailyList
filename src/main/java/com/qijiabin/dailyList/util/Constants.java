@@ -17,7 +17,7 @@ public class Constants {
 	public static final int RETRY_TIMES = 3;
 	public static final int INTERVAL_DAY = 3;
 	public static final String CRON_EXPRESSION = "0 0 5 * * ?"; // 每天早上5点执行一次
-	public static final String CRON_EXPRESSION_Test = "0 0/5 * * * ?"; // 每20秒执行一次
+	public static final String CRON_EXPRESSION_Test = "0 0/2 * * * ?"; // 每2分钟执行一次
 	public static final String EMAIL_FROM = "1067915332@qq.com";
 	public static final String EMAIL_TO = "qijiabin18@126.com";
 	public static final String EMAIL_QQ	= "1067915332";

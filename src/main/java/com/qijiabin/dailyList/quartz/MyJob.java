@@ -42,12 +42,12 @@ public class MyJob implements Job {
 		log.info("************结果如下***************");
 		StringBuilder sb = new StringBuilder();
 		for (Target t : list) {
-			System.out.println(t);
+			log.info(t.toString());
 			sb.append(t).append("<br/>");
 		}
 		SendEmail.send(sb.toString());
 		list.clear();
-		log.info("{} : 定时任务结果...", new Date());
+		log.info("{} : 定时任务结束...", new Date());
 	}
 	
 }

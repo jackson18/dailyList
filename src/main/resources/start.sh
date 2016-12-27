@@ -1,0 +1,1 @@
+java -cp ./resource:./lib/*  -Xms512m -Xmx2048m -Dfile.encoding=UTF-8 com.qijiabin.dailyList.Startup  &

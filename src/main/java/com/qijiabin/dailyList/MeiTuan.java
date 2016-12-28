@@ -46,6 +46,7 @@ public class MeiTuan implements PageProcessor {
 		return site;
 	}
 
+	@SuppressWarnings("deprecation")
 	@Override
 	public void process(Page page) {
 		try {
@@ -57,7 +58,8 @@ public class MeiTuan implements PageProcessor {
 			} else {
 				Selectable selectable = page.getHtml().xpath("//article/header/");
 				Date date = DateUtils.parseDate(selectable.xpath("//p/span[@class='date']/text()").toString(), "yyyy-MM-dd HH:mm");
-				if (DateUtil.getDateBefore(new Date(), Constants.INTERVAL_DAY).before(date)) {
+				Date date2 = new Date(date.getYear(), date.getMonth(), date.getDate());
+				if (DateUtil.getDateBefore(new Date(), Constants.INTERVAL_DAY).before(date2)) {
 					Target t = new Target();
 					t.setUrl(page.getUrl().toString());
 					t.setTitle(selectable.xpath("//h1/text()").toString());

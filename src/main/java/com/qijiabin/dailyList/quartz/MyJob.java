@@ -13,6 +13,7 @@ import com.qijiabin.dailyList.Calvin1978;
 import com.qijiabin.dailyList.Importnew;
 import com.qijiabin.dailyList.Manong;
 import com.qijiabin.dailyList.MeiTuan;
+import com.qijiabin.dailyList.Ruanyifeng;
 import com.qijiabin.dailyList.Tuicool;
 import com.qijiabin.dailyList.email.SendEmail;
 import com.qijiabin.dailyList.entity.Target;
@@ -38,6 +39,7 @@ public class MyJob implements Job {
 		Tuicool.run();
 		Manong.run();
 		Importnew.run();
+		Ruanyifeng.run();
 		
 		log.info("************结果如下***************");
 		StringBuilder sb = new StringBuilder();
